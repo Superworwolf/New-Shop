@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+</head>
+<body>
+        <a href=""><button></button></a>
+        <a href=""><button></button></a>
+        <h2></h2>
+        <ul class="ul"></ul>
+        <img src="img/logo.png" class="register-title" alt="">
+        <input type="text" name="username" placeholder="手机号/邮箱/用户名" class="reg1"><br/>
+        <span class='name-error'></span>
+        <p class="box"></p>
+        <p class="box1"></p>
+        <input type="password" name="password" placeholder="密码" class="reg2"><br/>
+        <img src="img/usericon.png" class="pic1" alt="">
+        <input type="submit" value="立即登录" class="center" id="center1">
+        <img src="img/passicon.png" class="pic2" alt="">
+        <div class="argee">
+            <input type="checkbox" checked="checked" id="argee" >
+            <label for="argee" style="color: #ffffff">自动登录</label>
+            <a href="http://www.iliangcang.com/i/our/service" style="color:#0c79cc;margin-left: 155px" >忘记密码?</a>
+        </div>
+        <div class="logo1">
+            <a href="https://im.qq.com/index.shtml" ><img src="img/qq.png" style="width: 21px;" alt=""></a>
+            <a href="https://im.qq.com/index.shtml" ><img src="img/xinlang.png" style="width: 21px;" alt=""></a>
+            <a href="https://im.qq.com/index.shtml" ><img src="img/douban.png" style="width: 21px;" alt=""></a>
+            <a href="https://im.qq.com/index.shtml" ><img src="img/tengxun.png" style="width: 21px;" alt=""></a>
+            <a href="register.html" class="font">注册良仓</a>
+        </div>
+        <script src="myajax.js" charset="utf-8"></script>
+        <script>
+            var oH2 = document.querySelector('h2');
+            var xhr = new XMLHttpRequest();
+            var oUl = document.querySelector('.ul');
+        </script>
+        <script>
+            var oUsername = document.querySelector('input[name=username]');
+            var oPassword = document.querySelector('input[name=password]');
+            var oSubmit = document.querySelector('input[type=submit]');
+            var oSpan = document.querySelector('span');
+            var oInput = document.querySelector('input');
+            console.log(oUsername);
+            console.log(oPassword);
+            oSubmit.onclick = function(){
+                myajax.post('http://h6.duchengjiu.top/shop/api_user.php',
+                        {
+                            status: 'login',
+                            username: oUsername.value,
+                            password: oPassword.value
+                        }, function(err, responseText){
+                            var json = JSON.parse(responseText);
+                            console.log(json);
+                            localStorage.token = json.data.token;
+                            localStorage.username = json.data.username;
+                            oSpan.innerText = json.message;
+                            oSpan.style.display = 'block'
+                            if (oInput.value === "") {
+                                oSpan.innerText = "请输入内容";
+                                oSpan.className = "error";
+                                oSubmit.disabled = "true";
+                                oSubmit.id = null;
+                            }else if (json.code === 0) {
+                                oSpan.className = "right";
+                                oSubmit.disabled = null;
+                                oSubmit.id = "center1";
+
+                            } else if(json.code === 1000 || json.code === 2001){
+                                oSpan.className = "error";
+                                oSubmit.disabled = "true";
+                                oSubmit.id = null;
+                            }else if (json.code === 1001) {
+                                oSpan.className = "error";
+                                oSubmit.disabled = "true";
+                                oSubmit.id = null;
+                            }
+                        });
+            };
+            oUsername.onchange = function () {
+                oSubmit.disabled = null;
+                oSubmit.id = "center1";
+            };
+            oPassword.onchange = function () {
+                oSubmit.disabled = null;
+                oSubmit.id = "center1";
+            }
+        </script>
+</body>
+</html>
