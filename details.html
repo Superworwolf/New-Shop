@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css">
+		<style>
+			.dts img {
+				width:350px;		
+			}
+			.dts{
+				position: relative;
+				width: 600px;
+				bottom: 300px;
+				left:500px;
+				margin-left:100px;
+				margin-top:40px;
+				text-align: reight;
+				font-size: 25px;
+			}
+			.nmb{
+				width: 50px;
+				text-align: center;
+			}
+			#in-car{
+				margin:20px 0;
+			}
+			.toast {
+			  width: 400px;
+			  text-align: center;
+			  border-radius: 10px;
+			  position: absolute;
+			  left: 45%;
+			  margin-left: -100px;
+			  top: 40%;
+			  padding: 80px 0;
+			  background-color: black;
+			  opacity: .8;
+			  filter: alpha(opacity=20);
+			  color: white;
+			  font-size: 30px;
+}
+.dts h3{
+	color: #3C3C3C;
+}
+.dts p{
+	color: #6c6c6c;
+}
+.dts h2{
+	color: #f40;
+	margin-left: 100px;
+	margin-top:-25px ;
+}
+.dts button {
+	margin-left:20px;
+	font-size: 25px;
+	width: 50px;
+	height: 40px;
+	background-color:#ccc;
+	border-radius: 5px;
+	border: 0;
+}
+.dts button:hover {
+	background-color:#252525;
+	color: #f40;
+}
+.dts .nmb {
+	margin-right: -20px;
+	position: relative;
+	top:-2px;
+	width: 120px;
+	height: 40px;
+	font-size: 20px;
+}
+.dts #in-car {
+	margin-left:37px ;
+	display: block;
+	width:200px;
+	height: 50px;
+	background-color:#f40;
+	border: 0;
+	border-radius:8px;
+	color:white;
+}
+.dts #in-car:hover{
+	background-color: #F22D00;
+}
+.car {
+	position: absolute;
+	width:20px;
+	height: 20px;
+	top:77px;
+	left:70px;
+	background-image: url('img/购物车.png');
+	background-size: 100% 100%;
+}
+		</style>
+		<link rel="stylesheet" href="css/zoom.css">
+	</head>
+	<body>
+		<script src="js/myajax2.js" charset="UTF-8"></script>
+		<script src="js/toast.js" charset="UTF-8"></script>
+		<script src="js/zoom.js" charset="utf-8"></script>
+		<script>
+			var goods_id = getQueryString('goods_id');
+			myajax.get('http://h6.duchengjiu.top/shop/api_goods.php',{goods_id},function (err,responseText){
+				var json = JSON.parse(responseText);
+				var obj = json.data[0];
+				document.body.innerHTML = `<div title='${obj.goods_name}' class="product" id="product">
+				<div id="smallPic" class="smallPic">
+				<img src='${obj.goods_thumb}'/>
+				<div id="zoom" class="zoom"></div>
+				</div>
+				<div id="bigPic" class="bigPic"></div>
+				<div class="dts"><h3>${obj.goods_name}</h3></div>
+				<div class="dts"><p>${obj.goods_desc}</p></div>
+				<div class="dts"><p>价格:</p><h2>¥&nbsp${obj.price}</h2></div>
+				<div class="dts">
+				<button class='more'>+</button>
+				<input type="text" value=1 	maxlength="2" class="nmb" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"/>
+				<button class="too-more">-</button><br/>
+				<i class="car"></i>
+				<input  id="in-car" type="button" value="添加到购物车"/>
+				</div>
+				</div>`;	
+				 zoom(obj.goods_thumb);
+				var oBtn1 = document.getElementsByClassName('more')[0];
+			var oBtn2 = document.getElementsByClassName('too-more')[0];
+			var oNmb = document.getElementsByClassName('nmb')[0];
+			var oSubmit = document.getElementById('in-car');
+			var nowNmb = oNmb.value;
+			oNmb.onblur = function () {
+				 if(oNmb.value === ""){
+					oNmb.value = "1";
+				 }else if (oNmb.value === "0") {
+				oNmb.value = "1";
+			}else if (oNmb.value === "00") {
+				oNmb.value = "1";
+			}
+			}
+			oBtn1.onclick = function () {
+				if (oNmb.value === '99') {
+					nowNmb = '99';
+				}else{
+					nowNmb = oNmb.value;
+					nowNmb++;
+				}
+			oNmb.value = nowNmb;
+			};	
+			oBtn2.onclick = function () {
+				if (oNmb.value === '1') {
+					oNmb.value === '1';
+				}else{
+					nowNmb = oNmb.value;
+					nowNmb--;
+				}
+				oNmb.value = nowNmb;
+			};	
+			oSubmit.onclick = function () {
+				myajax.post('http://h6.duchengjiu.top/shop/api_cart.php?token='+localStorage.token,
+        {goods_id, number:oNmb.value},
+        function(err, responseText) {
+          var json = JSON.parse(responseText);
+          if (json.code === 0) {
+            toast('添加到购物车成功\rヾ(๑╹◡╹)ﾉ"', 1500);
+          }else if (json.code === 1002) {
+          	toast('请登陆后再购买\r!!!∑(ﾟДﾟノ)ノ', 1500);
+          }else if (json.code === 1003) {
+          	toast('登录信息出错请重新登录\r┭┮﹏┭┮', 1500);
+          }
+        })
+     }
+});	
+		</script>
+	</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>用户注册</title>
+		<link rel="stylesheet" type="text/css" href="css/register.css">
+	</head>
+	<body>
+				<a href=""><button></button></a>
+		        <a href=""><button></button></a>
+				<h2></h2>
+		        <ul class="ul"></ul>
+                <img src="img/logo.png" class="register-title" alt="">
+                <p class="p1">用户名</p>
+		        <input type="text" name="username" placeholder="请输入用户名" class="reg1"><br/>
+                <span class='name-error'></span>
+                <p class="p2">创建密码</p>
+                <input type="password" name="password" placeholder="6-20位字符组成,区分大小写" class="reg2"><br/>
+                <input type="submit" value="立即注册" class="center" id="center1">
+                <div class="argee">
+                    <input type="checkbox" checked="checked" id="argee" >
+                    <label for="argee" style="color: #ffffff">同意</label>
+                    <a href="http://www.iliangcang.com/i/our/service" style="color:#0c79cc">&nbsp良仓注册条款</a>
+                </div>
+                <div class="logo1">
+                    <a href="https://im.qq.com/index.shtml" ><img src="img/qq.png" style="width: 21px;" alt=""></a>
+                    <a href="https://im.qq.com/index.shtml" ><img src="img/xinlang.png" style="width: 21px;" alt=""></a>
+                    <a href="https://im.qq.com/index.shtml" ><img src="img/douban.png" style="width: 21px;" alt=""></a>
+                    <a href="https://im.qq.com/index.shtml" ><img src="img/tengxun.png" style="width: 21px;" alt=""></a>
+                    <a href="login.html" class="font">登陆良仓</a>
+                </div>
+  <script src="myajax.js" charset="utf-8"></script>
+  <script>
+			var oH2 = document.querySelector('h2');
+			var xhr = new XMLHttpRequest();
+ 		 var oUl = document.querySelector('.ul');
+			</script>
+  <script>
+  var oUsername = document.querySelector('input[name=username]');
+  var oPassword = document.querySelector('input[name=password]');
+  var oSubmit = document.querySelector('input[type=submit]');
+  var oSpan = document.querySelector('span');
+  var oInput = document.querySelector('input');
+  console.log(oUsername);
+  console.log(oPassword);
+       oSubmit.onclick = function(){
+      myajax.post('http://h6.duchengjiu.top/shop/api_user.php',
+    {
+      status: 'register',
+      username: oUsername.value,
+      password: oPassword.value
+    }, function(err, responseText){
+      var json = JSON.parse(responseText);
+      console.log(json);
+         oSpan.innerText = json.message;
+            oSpan.style.display = 'block'
+            if (oInput.value === "") {
+            	oSpan.innerText = "请输入内容";
+            	oSpan.className = "error";
+              oSubmit.disabled = "true";
+              oSubmit.id = null;
+            }else if (json.code === 0) {
+              oSpan.className = "right";
+              oSubmit.disabled = null;
+              oSubmit.id = "center1";
+              
+            } else if(json.code === 1000 || json.code === 2001){
+              oSpan.className = "error";
+              oSubmit.disabled = "true";
+              oSubmit.id = null;
+            }else if (json.code === 1001) {
+              oSpan.className = "error";
+              oSubmit.disabled = "true";
+              oSubmit.id = null;
+            }
+    });
+  };
+           oUsername.onchange = function () {
+	      oSubmit.disabled = null;
+        oSubmit.id = "center1";
+           	};
+           oPassword.onchange = function () {
+	      oSubmit.disabled = null;
+        oSubmit.id = "center1";
+           }
+  </script>
+	</body>
+</html>
