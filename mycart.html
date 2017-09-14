@@ -1,20 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="css/newfile.css" />
-</head>
-<body>
-	<!--*****************************头部部分*******************************-->
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		    <link rel="stylesheet" href="css/newfile.css" />
+		    <style>
+	main {
+  width: 960px;
+  margin: 0 auto;
+}
+		    	table,td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  vertical-align: middle;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+}
+table img {
+  border-radius: 50%;
+  width: 100px;
+}
+td h4 {
+	color:orangered;
+}
+#total {
+	color:orangered;
+}
+.goods_id{
+	display: none;
+}
+		    </style>
+	</head>
+	<body>
+		<!--*****************************头部部分*******************************-->
 	<div class="resgester">
 		  <div class="log"><a href="index.html"><i></i>买买买</a></div>
 		  <ul class="news">
-		  	<li><a href="#" class="oldcolor"><span>登录</a></li>
+		  	<li><a href="login.html" class="oldcolor"><span>登录</a></li>
 		  		<div></div>
-		  	<li><a href="#" class="oldcolor">注册</a></li>
+		  	<li><a href="register.html" class="oldcolor">注册</a></li>
 		  	<div></div>
-		  	<li><a href="#" class="news_color">购物车</a></li>
+		  	<li><a href="mycart.html" class="news_color">购物车</a></li>
 		  	<div></div>
 		  	<li><a href="#" class="news_color">我的订单</a></li>
 		  	<div></div>
@@ -46,23 +75,7 @@
 		  oSearch.onblur = function(){
 		  	animate(oSearch,{"right":-304},800);
 		  }
-	//*********************************吸顶********************
-	var oHeader = document.querySelector(".header");
-		
-			window.onscroll = function(){
-			
-				var scrollValue = document.body.scrollTop || document.documentElement.scrollTop;
-				var hotGoods = document.querySelectorAll(".hotgoods");
-					if (scrollValue >= 30) {
-						oHeader.style.position = "fixed";
-						oHeader.style.top = "0";
-						oHeader.style.zIndex = "99";
-					}else if(scrollValue = 10){
-						oHeader.style.position = "relative"
-						oHeader.style.top = "0px";
-						}
-					}
-	//********************************************************
+	//*****************************************************
 	var oHeader = document.querySelector(".header");
 	var oNav = document.querySelector("#nav");
     var oH2 = document.querySelector('h2');
@@ -71,7 +84,6 @@
    myajax.get("http://h6.duchengjiu.top/shop/api_cat.php",{},function(err,responseText){
 				var json = JSON.parse(responseText);
 				var data = json.data;
-				oNav.innerHTML +=`<li><a href = "index.html">首页</a></li>`;
 				for (var i = 0; i < data.length; i++) {
 					oNav.innerHTML += `
 												<li><a href = "22.html?cat_id=${data[i].cat_id}">${data[i].cat_name}</a></li>
@@ -85,35 +97,107 @@
         if(result === null) return null;
         return decodeURIComponent(result[2]);
     }
-    //******************************************头部到此
-    //**********************************产生的每一个li****************
-    var cat_id = getQueryString('cat_id');
-    var getHotGoods = document.querySelector('.get_hot_goods');
-    myajax.get('http://h6.duchengjiu.top/shop/api_goods.php?cat_id=' + cat_id, {}, function(error, responseText){
-        var json = JSON.parse(responseText);//返回的整个json对象
-        var data = json.data;//json对象当中的data是一个数组
-getHotGoods.innerHTML +=`
-											<div class = "floorsign">
-											</div>
-														`;
-        for (var i = 0; i < data.length-2; i++) {
-            var obj = data[i];//数组里面的每一项是一个商品分类的对象
-            getHotGoods.innerHTML += `
-											<li class = "hotgoods"><a href = "details.html?goods_id=${obj.goods_id}"><div class = "imgbox"><img src = "${data[i].goods_thumb}"></div>
-											<div class = "goodscript">${data[i].goods_desc}</div>
-											<div class = "goodsbottom">
-												<span class = "goodsname">${data[i].goods_name}
-												</span>
-												<p clsss="price">¥  ${data[i].price}</p>
-											</div>
-											</a></li>
-											`
-        }
-		hotgoodstyle();	
-    });
-    //*************************************************每一个li到此结束
-</script>
-<!--****************************************底部部分******************************-->
+    </script>
+<!--    //******************************************头部到此-->
+<main>
+		<table>
+			<tr>
+				<td>全选 <input type="checkbox"/></td>
+				<td>商品信息</td>
+				<td>单价</td>
+				<td>数量</td>
+				<td>金额</td>
+				<td>操作</td>
+			</tr>
+		</table>
+		<div>合计：<span id="total">0</span> <input type="button" value="清空购物车" id="empty-cart"/> <a href="#">立即结算</a></div>
+		</main>
+		<script type="text/javascript" src="js/myajax2.js"></script>
+		<script>
+			var oTable = document.querySelector('table');
+			var oTotal = document.querySelector('#total');
+			myajax.get('http://h6.duchengjiu.top/shop/api_cart.php',{token:localStorage.token},function (err,responseText) {
+				var json = JSON.parse(responseText);
+				var data = json.data;
+                var sum = 0;
+                for(i = 0; i < data.length; i++){
+                var obj = data[i];
+                sum += obj.goods_price * obj.goods_number;
+                oTable.innerHTML += `<tr>
+                    <td><input type="checkbox"/></td>
+                    <td>
+                    <img src="${obj.goods_thumb}" />
+                    <p>${obj.goods_name}</p>
+                    </td>
+                    <td>¥ ${obj.goods_price}</td>
+                    <td>${obj.goods_number}</td>
+                    <td name="goods_id" calss="goods_id">${obj.goods_id}</td>
+                    <td name='sum'><h4>¥ ${obj.goods_price*obj.goods_number}</h4></td>
+                    <td><input data-id="${obj.goods_id}" type="button" value="删除" name="delete"/></td>
+                </tr>`;
+                }
+                allsum();
+			});
+			
+			oTable.addEventListener('click',function(evt){
+				evt = evt || window.evt;
+				var target = evt.target || evt.srcElement;
+				if (target.name === 'delete') {
+					if (!confirm('确认要删除吗？')) {
+						return;
+					}
+					var goods_id = target.dataset.id;
+					var number = 0;
+					myajax.post('http://h6.duchengjiu.top/shop/api_cart.php?token='+localStorage.token,{goods_id,number},(err,responseText) => {
+						var json = JSON.parse(responseText);
+						if (json.code === 0) {
+							var tr = target.parentNode.parentNode;
+							tr.parentNode.removeChild(tr);
+							   allsum();
+							location.reload();
+						}
+					})
+				}
+			})
+			
+			  var oEmptyCart = document.querySelector('#empty-cart');
+    oEmptyCart.onclick = () => {
+      if (!confirm('确认要清空整个购物车吗？')) {
+        return;
+      }
+			var oGoodsIds = document.querySelectorAll('td[name=goods_id]');
+      for (var i = 0; i < oGoodsIds.length; i++) {
+        var td = oGoodsIds[i];
+        var goods_id = parseInt(td.innerText);
+        var number = 0;
+        (function(td){
+          myajax.post('http://h6.duchengjiu.top/shop/api_cart.php?token='+localStorage.token,
+          {goods_id, number},
+          (err, responseText) => {
+            var json = JSON.parse(responseText);
+            console.log(json);
+            if (json.code === 0) {
+              var tr = td.parentNode;
+              console.log(tr);
+              tr.parentNode.removeChild(tr);
+              //显示总价
+              allsum();
+            }
+          });
+        })(td);
+      }
+	}		
+			function allsum () {
+				var oSums = document.querySelectorAll('td[name=sum]');
+				var sum = 0;
+				for (var o = 0; o < oSums.length; o++) {
+					sum += parseInt(oSums[o].innerText.substr(1));
+				}
+				localStorage.sum = sum;
+				oTotal.innerText = "¥ " + sum;
+			}
+		</script>
+		<!--****************************************底部部分******************************-->
 <div class="bottomer">
 			<div class="category_box">
 				<ul class="category">
@@ -245,5 +329,5 @@ getHotGoods.innerHTML +=`
 			}());
 		</script>
 <!--******************************************************************************-->
-</body>
+	</body>
 </html>
