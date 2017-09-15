@@ -13,9 +13,9 @@
 		  		<div></div>
 		  	<li><a href="register.html" class="oldcolor" id="signout">注册</a></li>
 		  	<div></div>
-		  	<li><a href="#" class="news_color">购物车</a></li>
+		  	<li><a href="mycart.html"" class="news_color" id="goodscar">购物车</a></li>
 		  	<div></div>
-		  	<li><a href="#" class="news_color">我的订单</a></li>
+		  	<li><a href="Order.html" class="news_color">我的订单</a></li>
 		  	<div></div>
 		  	<li class="searchparent"><input class="search" placeholder="search" type="text" /></li>
 		  	<div></div>
@@ -39,13 +39,14 @@
     var oSearch = document.querySelector(".search");
     oSearch.onkeyup = function(event) {
         if (event.keyCode === 13) {
-            location.href = 'search.html?search_text='+this.value;
+            location.href = "search.html?search_text="+this.value;
         }
     }
 </script>
 		<script>
 			var loginChange = document.querySelector("#loginchange");
 			var loginOut = document.querySelector("#signout");
+			var oGoodsCar = document.querySelector("#goodscar");
 			var oNews = document.querySelector(".news")
 			if (localStorage.username) {
 				oNews.style.width = "700px";
@@ -61,6 +62,13 @@
 				if (localStorage.username) {
 					location.reload();
 					localStorage.clear();
+				}
+			}
+			oGoodsCar.onclick = function(){
+				if (localStorage.username) {
+					location.href = "mycart.html";
+				}else{
+					location.href = "login.html";
 				}
 			}
 			var currentLi = document.querySelectorAll(".everyFloor");
@@ -177,10 +185,10 @@ function changee(n){
 			<a href="#">家居建材领卷最高减1000</a>
 		</li>
 		<li class="tabright">
-			<a href="#">京东全球售升级 新域名同步...</a>
-			<a href="#">京东会员体系全新升级</a>
-			<a href="#">《京东隐私》</a>
-			<a href="#">京东商城到家服务品牌上线</a>
+			<a href="#">买买买全球售升级 新域名同步...</a>
+			<a href="#">买买买会员体系全新升级</a>
+			<a href="#">《璟煜隐私》</a>
+			<a href="#">买买买商城到家服务品牌上线</a>
 		</li>
 	</ul>
 </div>
@@ -237,11 +245,14 @@ function changee(n){
 				oNav.innerHTML +=`<li><a href = "index.html">首页</a></li>`;
 				for (var i = 0; i < data.length; i++) {
 					oNav.innerHTML += `
-												<li><a href = "22.html?cat_id=${data[i].cat_id}">${data[i].cat_name}</a></li>
+												<li><a href = "class.html?cat_id=${data[i].cat_id}&page=1">${data[i].cat_name}</a></li>
 												`
 				}
+			
 			});
 		</script>
+		<!--****************************翻页************************************-->
+		
 		<!--******************************轮播图***************************-->
 		<ul class="carousel">
 		  <li><a href="#"><img src="img/1070.jpg"></a></li>
@@ -271,12 +282,6 @@ function changee(n){
 		  var carouselSpan = carouselButton.querySelectorAll("span");
 		  carouselSpan[0].style.background = "orange";
 		  var timer = setInterval(move,2000);
-//		  carousel.onmouseover = function(){
-//		  	clearInterval(timer);
-//		  }
-//		  carousel.onmouseout = function(){
-//		  	timer = setInterval(move,2000);
-//		  }
 			carouselLeftButton.onclick = function(){
 				if (carouselPic.isAnimated) return;
 				clearInterval(timer);
@@ -426,7 +431,9 @@ function changee(n){
 					}
 				}
 		</script>
+
 <div class="bottomer">
+	<div class="loadmore">查看更多</div>
 			<div class="category_box">
 				<ul class="category">
 					<li><span></span><p>品类齐全,轻松购物</p></li>
@@ -539,6 +546,8 @@ function changee(n){
 			</ul>
 		</div>
 		<script>
+			var loadMore = document.querySelector(".loadmore");
+			
 			var categoryBox = document.querySelector(".category_box");
 			var category = categoryBox.querySelector(".category");
 			var categoryScript = category.querySelectorAll("li");
@@ -555,6 +564,30 @@ function changee(n){
 					
 				}
 			}());
+			loadMore.onclick = function(){
+				myajax.get("http://h6.duchengjiu.top/shop/api_goods.php?cat_id=55",{},function(err,responseText){
+				var json = JSON.parse(responseText);
+				var data = json.data;
+				getHotGoods.innerHTML +=`
+														<div class = "floorsign">
+														<div class = "floorbutton">更多<div>
+														</div>
+														`;
+				for (var k = 0 ; k<data.length-2 ; k++) {
+					getHotGoods.innerHTML += `
+											<li class = "hotgoods"><a href = "details.html?goods_id=${data.goods_id}"><div class = "imgbox"><img src = "${data[k].goods_thumb}"></div>
+											<div class = "goodscript">${data[k].goods_desc}</div>
+											<div class = "goodsbottom">
+												<span class = "goodsname">${data[k].goods_name}
+												</span>
+												<p clsss="price">¥  ${data[k].price}</p>
+											</div>
+											</a></li>
+											`
+						}
+					hotgoodstyle();
+					});	
+			}
 		</script>
 	<!--****************************************吸顶*********************************-->
 	<script>
@@ -565,6 +598,7 @@ function changee(n){
 				var scrollValue = document.body.scrollTop || document.documentElement.scrollTop;
 				var hotGoods = document.querySelectorAll(".hotgoods");
 					if (scrollValue >= 30) {
+						oHeader.style.background = "transparent";
 						oHeader.style.position = "fixed";
 						oHeader.style.top = "0";
 						oHeader.style.zIndex = "99";
