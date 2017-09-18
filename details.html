@@ -5,6 +5,7 @@
 		<title></title>
 		<!--<link rel="stylesheet" type="text/css" href="css/reset.css">-->
 		<style>
+			body{height: 1160px;}
 			.dts img {
 				width:350px;		
 			}
@@ -106,7 +107,7 @@
 		<div class="resgester">
 		  <div class="log"><a href="index.html"><i></i>买买买</a></div>
 		  <ul class="news">
-		  	<li><a href="login.html" class="oldcolor" id="loginchange"><span>登录</a></li>
+		  	<li><a href="login.html" class="oldcolor" id="loginchange">登录</a></li>
 		  		<div></div>
 		  	<li><a href="register.html" class="oldcolor" id="signout">注册</a></li>
 		  	<div></div>
@@ -127,7 +128,7 @@
 <script type="text/javascript" src="js/animate.js" ></script>
 <script type="text/javascript" src="js/liangcang.js" ></script>
 <script>
-		var loginChange = document.querySelector("#loginchange");
+			var loginChange = document.querySelector("#loginchange");
 			var loginOut = document.querySelector("#signout");
 			var oGoodsCar = document.querySelector("#goodscar");
 			var oNews = document.querySelector(".news")
@@ -196,7 +197,7 @@
 				oNav.innerHTML +=`<li><a href = "index.html">首页</a></li>`;
 				for (var i = 0; i < data.length; i++) {
 					oNav.innerHTML += `
-												<li><a href = "class.html?cat_id=${data[i].cat_id}">${data[i].cat_name}</a></li>
+												<li><a href = "class.html?cat_id=${data[i].cat_id}&page=1">${data[i].cat_name}</a></li>
 												`
 				}
 			});
@@ -288,15 +289,15 @@
 						  <dd><a href="#">夺宝岛</a></dd>
 						  <dd><a href="#">DIY装机</a></dd>
 						  <dd><a href="#">延保服务</a></dd>
-						  <dd><a href="#">京东E卡</a></dd>
-						  <dd><a href="#">京东通信</a></dd>
-						  <dd><a href="#">京东JD+</a></dd>
+						  <dd><a href="#">璟煜E卡</a></dd>
+						  <dd><a href="#">璟煜通信</a></dd>
+						  <dd><a href="#">璟煜JD+</a></dd>
 						 </dl>
 					</li>
 					<li>
 						<dl>
-							<dt>京东自营覆盖区县</dt>
-							<dd>京东已向全国2661个区县提供自&nbsp;营配送服务，支持货到付款、&nbsp;POS机刷卡和售后上门服务。</dd>
+							<dt>璟煜自营覆盖区县</dt>
+							<dd>璟煜已向全国2661个区县提供自&nbsp;营配送服务，支持货到付款、&nbsp;POS机刷卡和售后上门服务。</dd>
 							<dd id="lookscript"><a href="#">查看详情<</a></dd>
 						</dl>
 					</li>
@@ -309,13 +310,13 @@
 				<li><a href="#">合作招商</a></li>
 				<li><a href="#">商家帮助</a></li>
 				<li><a href="#">营销中心</a></li>
-				<li><a href="#">手机京东</a></li>
+				<li><a href="#">手机璟煜</a></li>
 				<li><a href="#">友情链接</a></li>
 				<li><a href="#">销售联盟</a></li>
-				<li><a href="#">京东社区</a></li>
+				<li><a href="#">璟煜社区</a></li>
 				<li><a href="#">风险监测</a></li>
 				<li><a href="#">隐私策略</a></li>
-				<li><a href="#">京东公益</a></li>
+				<li><a href="#">璟煜公益</a></li>
 				<li><a href="#">English Site</a></li>
 				<li><a href="#">Media  &amp IR</a></li>
 			</ul>
@@ -326,12 +327,12 @@
 				<li><a href="#">违法和不良信息举报电话：4006561155</a></li>
 			</ul>
 			<ul class="copyright">
-				<li class="copyleft">Copyright &copy;" 2004 - 2017  京东JD.com 版权所有</li>
+				<li class="copyleft">Copyright &copy;" 2004 - 2017  璟煜JD.com 版权所有</li>
 				<li>消费者维权热线：4006067733<a href="#">经营证照</a></li>
 			</ul>
 			<ul class="subordinate">
-				<li class="subordinateleft">京东旗下网站:<a href="#">京东支付</a></li>
-				<li><a href="#">京东云</a></li>
+				<li class="subordinateleft">璟煜旗下网站:<a href="#">璟煜支付</a></li>
+				<li><a href="#">璟煜云</a></li>
 			</ul>
 			<ul class="evalute">
 				<li><a href="#"><i class="evalute1"></i></a></li>
